@@ -7,7 +7,6 @@ Created on Tue Aug 21 08:53:06 2018
 
 from openpyxl import load_workbook
 import ben.parser
-import ben.account
 
 # TODO: work on just getting data
 
@@ -18,7 +17,16 @@ wb = load_workbook('./Book1.xlsx')
 print("Name of sheet being analyzed: ", wb.sheetnames)
 
 sheet = wb[wb.sheetnames[0]]
-
+parser = ben.parser.Parser()
 for row_index in range(1, sheet.max_row+1):
     for col_index in range(1, sheet.max_column+1): 
-        ben.parser.gather_data(sheet.cell(row=row_index, column=col_index).value)
+        parser.gather_data(sheet.cell(row=row_index, column=col_index).value,
+                           row_index, col_index)
+
+key = None
+for key in parser.accts:
+    #print("ID: ", parser.accts[key].ID)
+    #print("Name: ", parser.accts[key].name)
+    pass
+
+# TODO: determine whether staff allowance applies based on description

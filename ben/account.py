@@ -4,22 +4,22 @@ Created on Tue Aug 21 13:03:32 2018
 
 @author: Ben.Olson
 """
-class Transaction:
-    def __init__(self, date, kind, amount):
-        __slots__ = ['date', 'kind', 'amount']
+class Record:
+    def __init__(self, date, description, amount):
+        __slots__ = ['date', 'description', 'amount']
         self.date = date
-        self.kind = kind
+        self.description = description
         self.amount = amount
         
 
 class Member:
     def __init__(self, name):
-        __slots__ = ['name', 'charge', 'allowance']
+        __slots__ = ['name']
         self.name = name
-        self.record = []
+        self.record = {}
         
-    def add_record(self):
-        self.record.append(Transaction(date, kind, amount))
+    def add_record(self, date, descr, amount):
+        self.record.append(Record(date, descr, amount))
         
         
 class Account:
@@ -27,8 +27,8 @@ class Account:
         __slots__ = ['name', 'ID', 'members']
         self.name = name
         self.ID = ID
-        self.members = []
+        self.members = {}
         
     def add_member(self, name):
-        self.members.append(Member(name))
+        self.members[name] = Member(name)
         
