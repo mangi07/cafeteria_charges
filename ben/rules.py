@@ -16,7 +16,7 @@ class Stats:
         
 class Rules:
     def __init__(self):
-        menu_items = {
+        self.menu_items = {
                 "Bacon": Stats("breakfast", 2),
                 "Sausage": Stats("breakfast", 2),
                 "Scrambled Eggs": Stats("breakfast", 1.5),
@@ -68,3 +68,9 @@ class Rules:
                 "Carry Out Tray": Stats("other", .25),
                 "NO ID CARD FEE": Stats("other", .5)
         }
+
+    def is_allowance_item(self, description):
+        for item in self.menu_items:
+            if item in description:
+                return True
+        return False
