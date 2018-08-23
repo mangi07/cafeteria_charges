@@ -14,7 +14,7 @@ import ben.parser
 wb = load_workbook('./Book1.xlsx')
 
 # Get sheet names
-print("Name of sheet being analyzed: ", wb.sheetnames)
+print("Name of sheet being analyzed: ", wb.sheetnames[0])
 
 sheet = wb[wb.sheetnames[0]]
 parser = ben.parser.Parser()
@@ -32,3 +32,4 @@ for key in parser.accts:
 parser.print_account_data()
 
 # TODO: determine whether staff allowance applies based on description
+# TODO: coordinate with cashiers to learn menu description in their POS system

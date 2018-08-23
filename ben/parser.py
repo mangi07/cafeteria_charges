@@ -54,6 +54,7 @@ class Parser:
     
     
     def gather_data(self, cell_value, row, col):
+        print("row: ", row, " column: ", col)
         kind = self.determine_kind(cell_value)
         if kind == Kind.FAMILY_NAME:
             if cell_value in self.accts:
@@ -93,7 +94,11 @@ class Parser:
             print("\n\nAccount: ", acct.name, "ID: ", acct.ID)
             for member_key in acct.members:
                 member = acct.members[member_key]
-                print("****Member: ", member.name)
+                print("\n****Member: ", member.name)
+                for record in member.records:
+                    print("********Record: Date: ", record.date,
+                          " Description: ", record.description,
+                          " Amount: ", record.amount)
     
     
     
