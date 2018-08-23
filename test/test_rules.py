@@ -5,6 +5,9 @@ from ben.rules import Rules
 https://stackoverflow.com/questions/1896918/running-unittest-with-typical-test-directory-structure
 https://www.internalpointers.com/post/run-painless-test-suites-python-unittest
 https://www.blog.pythonlibrary.org/2016/07/07/python-3-testing-an-intro-to-unittest/
+
+cd to project root and run tests with:
+python -m unittest discover -v
 """
 class TestRules(unittest.TestCase):
 
