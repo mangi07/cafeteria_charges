@@ -29,4 +29,6 @@ for key in parser.accts:
     #print("Name: ", parser.accts[key].name)
     pass
 
+parser.print_account_data()
+
 # TODO: determine whether staff allowance applies based on description

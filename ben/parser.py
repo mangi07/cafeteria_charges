@@ -25,7 +25,7 @@ class Parser:
         self.curr_member = None
         
         self.temp_date = None
-        self.temp_family_member = None
+        self.temp_member_name = None
         self.temp_amount = None
         self.temp_record_descr = None
         self.prev_cell = None
@@ -68,13 +68,13 @@ class Parser:
         elif kind == Kind.DATE:
             self.temp_date = cell_value
         elif kind == Kind.FAMILY_MEMBER:
-            self.temp_family_member = cell_value
+            self.temp_member_name = cell_value
         elif kind == Kind.AMOUNT and self.prev_cell != "Total":
                 # gather final cell in row and add a member's record
                 self.temp_amount = cell_value
-                if self.temp_family_member not in self.curr_acct.members:
-                    self.curr_acct.add_member(self.temp_family_member)
-                self.curr_acct.members[self.curr_member].add_record(
+                if self.temp_member_name not in self.curr_acct.members:
+                    self.curr_acct.add_member(self.temp_member_name)
+                self.curr_acct.members[self.temp_member_name].add_record(
                         self.temp_date, 
                         self.temp_record_descr, 
                         self.temp_amount)
@@ -83,6 +83,17 @@ class Parser:
             self.temp_record_descr = cell_value
         
         self.prev_cell = cell_value
+        
+    def get_account_data(self):
+        return self.accts
+    
+    def print_account_data(self):
+        for acct_key in self.accts:
+            acct = self.accts[acct_key]
+            print("\n\nAccount: ", acct.name, "ID: ", acct.ID)
+            for member_key in acct.members:
+                member = acct.members[member_key]
+                print("****Member: ", member.name)
     
     
     

@@ -16,7 +16,7 @@ class Member:
     def __init__(self, name):
         __slots__ = ['name']
         self.name = name
-        self.record = {}
+        self.record = []
         
     def add_record(self, date, descr, amount):
         self.record.append(Record(date, descr, amount))
