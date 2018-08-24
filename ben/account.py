@@ -10,7 +10,8 @@ class Record:
         self.date = date
         self.description = description
         self.amount = amount
-        
+        # needed only for a record representing a benefit
+        self.expected_amount = None
 
 class Member:
     def __init__(self, name):
@@ -28,7 +29,11 @@ class Account:
         self.name = name
         self.ID = ID
         self.members = {}
+        self.total = 0
+        self.expected_total = None
         
     def add_member(self, name):
         self.members[name] = Member(name)
+        
+
         

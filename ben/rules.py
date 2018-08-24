@@ -6,13 +6,16 @@ Created on Thu Aug 23 13:03:35 2018
 """
 
 class Stats:
-    def __init__(self, mtype, amount, benefit=False, conditional=False):
+    def __init__(self, mtype, amount, benefit=False, accompany=False):
         self.mtype = mtype
         self.amount = amount
         # boolean whether staff allowance applies
         self.benefit = benefit
-        # whether other items must be ordered that day for the benefit to apply
-        self.conditional = conditional
+        # some other condition that must be satisfied for benefit to apply,
+        # such as whether other items must be ordered that day for the benefit to apply
+        # 
+        # Checker is responsible to know the condition and check based on condition
+        self.accompany = accompany
         
 class Rules:
     def __init__(self):
@@ -68,9 +71,22 @@ class Rules:
                 "Carry Out Tray": Stats("other", .25),
                 "NO ID CARD FEE": Stats("other", .5)
         }
+        
+        self.max_benefit = -3
 
     def is_allowance_item(self, description):
-        for item in self.menu_items:
-            if item in description:
-                return True
+        for item_key in self.menu_items:
+            if item_key in description:
+                item = self.menu_items[item_key]
+                if item.benefit:
+                    return True
         return False
+    
+    def item_must_be_accompanied(self, description):
+        for item_key in self.menu_items:
+            if item_key in description:
+                item = self.menu_items[item_key]
+                return item.accompany
+        return False
+    
+    

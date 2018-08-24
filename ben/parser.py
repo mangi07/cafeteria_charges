@@ -71,14 +71,16 @@ class Parser:
         elif kind == Kind.FAMILY_MEMBER:
             self.temp_member_name = cell_value
         elif kind == Kind.AMOUNT and self.prev_cell != "Total":
-                # gather final cell in row and add a member's record
-                self.temp_amount = cell_value
-                if self.temp_member_name not in self.curr_acct.members:
-                    self.curr_acct.add_member(self.temp_member_name)
-                self.curr_acct.members[self.temp_member_name].add_record(
-                        self.temp_date, 
-                        self.temp_record_descr, 
-                        self.temp_amount)
+            # gather final cell in row and add a member's record
+            self.temp_amount = cell_value
+            if self.temp_member_name not in self.curr_acct.members:
+                self.curr_acct.add_member(self.temp_member_name)
+            self.curr_acct.members[self.temp_member_name].add_record(
+                    self.temp_date, 
+                    self.temp_record_descr, 
+                    self.temp_amount)
+        elif kind == Kind.AMOUNT and self.prev_cell == "Total":
+            self.curr_acct.total = cell_value
         elif kind == Kind.OTHER and col == 2:
             # record description expected in Excel column 2
             self.temp_record_descr = cell_value
@@ -91,7 +93,7 @@ class Parser:
     def print_account_data(self):
         for acct_key in self.accts:
             acct = self.accts[acct_key]
-            print("\n\nAccount: ", acct.name, "ID: ", acct.ID)
+            print("\n\nAccount: ", acct.name, "ID: ", acct.ID, "Total: ", acct.total)
             for member_key in acct.members:
                 member = acct.members[member_key]
                 print("\n****Member: ", member.name)
@@ -99,6 +101,8 @@ class Parser:
                     print("********Record: Date: ", record.date,
                           " Description: ", record.description,
                           " Amount: ", record.amount)
+                    
+
     
     
     

@@ -11,10 +11,27 @@ python -m unittest discover -v
 """
 class TestRules(unittest.TestCase):
 
+    rules = None
+    
+    def setUp(self):
+        self.rules = Rules()
+        
     def test_isAllowanceItem(self):
-        rules = Rules()
-        result = rules.is_allowance_item("Cash Register - Hot Lunch")
+        #rules = Rules()
+        result = self.rules.is_allowance_item("Cash Register - Hot Lunch")
         self.assertTrue(result)
+    
+    def test_isNotAllowanceItem(self):
+        result = self.rules.is_allowance_item("Cash Register - Chips")
+        self.assertFalse(result)
+        
+    def test_itemHasCondition(self):
+        result = self.rules.item_has_condition("Cash Register - Rice")
+        self.assertTrue(result)
+        
+    def test_itemDoesNotHaveCondition(self):
+        result = self.rules.item_has_condition("Cash Register - K3-K5 Hot Lunch")
+        self.assertFalse(result)
 
 if __name__ == '__main__':
     unittest.main()

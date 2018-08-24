@@ -18,6 +18,7 @@ print("Name of sheet being analyzed: ", wb.sheetnames[0])
 
 sheet = wb[wb.sheetnames[0]]
 parser = ben.parser.Parser()
+# cells must be traversed in this order for parser to work correctly!
 for row_index in range(1, sheet.max_row+1):
     for col_index in range(1, sheet.max_column+1): 
         parser.gather_data(sheet.cell(row=row_index, column=col_index).value,
