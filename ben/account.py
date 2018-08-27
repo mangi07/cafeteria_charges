@@ -11,7 +11,7 @@ class Record:
         self.description = description
         self.amount = amount
         # needed only for a record representing a benefit
-        self.expected_amount = None
+        self.updated_amount = None
 
 class Member:
     def __init__(self, name):

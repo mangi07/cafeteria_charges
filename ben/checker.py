@@ -26,10 +26,11 @@ Created on Fri Aug 24 09:20:16 2018
 import ben.rules
 
 class Day:
-    def __init__(self):
+    def __init__(self, records=[]):
         __slots__ = ['records', 'benefit_amount', 'total', 'expected_total']
-        self.records = []
+        self.records = records
         self.benefit_amount = 0
+        self.total = 0
         self.expected_total = 0
 
 class Checker:
@@ -53,7 +54,7 @@ class Checker:
                 day.records.append(record)
             self.check_days(days)
     
-    # for each member
+    # for each member, each Day in days contains a list of records
     def check_days(self, days):
         """for each day, get expected benefit"""
         for key in days:
@@ -67,7 +68,7 @@ class Checker:
             for record in days[key].records:
                 total_balance += record.amount
                 if record.amount < 0:
-                    daily_benefit += record.amount
+                    daily_benefit += abs(record.amount)
                     benefit_records.append(record)
                 else:
                     total_charges += record.amount
@@ -80,16 +81,18 @@ class Checker:
                 if ( self.rules.item_must_be_accompanied(record.description)
                         and record.amount > 0 ):
                     part_of_eligible += record.amount
+                    total_eligible += record.amount
             
             if part_of_eligible >= total_eligible:
                 total_eligible = 0
-            if abs(total_eligible) > abs(self.rules.max_benefit):
+            if total_eligible > abs(self.rules.max_benefit):
                 total_eligible = abs(self.rules.max_benefit)
-            
-            # TODO: total up the amount of benefit records
-            # TODO: make total expected amount right among benefit records for that day
-            #   according to total_eligible (put in record.expected_amount)
-            # and watch for signs...should be negative amounts since it's a benefit
+            if daily_benefit > abs(total_eligible):
+                # then too much benefit was given that day and we need to take back the difference
+                take_back = daily_benefit - total_eligible
+                for benefit in benefit_records:
+                    benefit.updated_amount = (abs(benefit.amount) - take_back) * -1
+                    break
                 
             
             

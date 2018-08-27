@@ -72,7 +72,7 @@ class Rules:
                 "NO ID CARD FEE": Stats("other", .5)
         }
         
-        self.max_benefit = -3
+        self.max_benefit = 3
 
     def is_allowance_item(self, description):
         for item_key in self.menu_items:
