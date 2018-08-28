@@ -2,6 +2,8 @@ import unittest
 from ben.checker import Checker
 from ben.checker import Day
 from ben.account import Record
+from ben.account import Account
+from ben.account import Member
 from datetime import datetime
 
 """
@@ -26,6 +28,7 @@ class TestChecker(unittest.TestCase):
         self.day4 = datetime(2018, 9, 30)
         self.day5 = datetime(2018, 10, 2)
         self.day6 = datetime(2018, 10, 3)
+        self.day7 = datetime(2018, 10, 4)
 
         self.checker = Checker(self.accts) # self.accts never used but needed to create object here
         self.days = {
@@ -60,7 +63,10 @@ class TestChecker(unittest.TestCase):
             self.day6: Day([Record(self.day6, "Cash Register - Rice", 1),
                             Record(self.day6, "Cash Register - Fried Chicken", 2.50),
                             Record(self.day6, "Cash Register - Boiled Eggs", 1),
-                            Record(self.day6, "Cash Register - STAFF ALLOWANCE", -3)])
+                            Record(self.day6, "Cash Register - STAFF ALLOWANCE", -3)]),
+    
+            # expect first record to be updated to $2 lower since $3 benefit applies and there are no other records
+            self.day7: Day([Record(self.day7, "Cash Register - Hot Lunch", 5)])
         }
 
     def test_checkDays(self):
@@ -71,7 +77,58 @@ class TestChecker(unittest.TestCase):
         self.assertTrue(self.days[self.day4].records[3].updated_amount == 0)
         self.assertTrue(self.days[self.day5].records[3].updated_amount == 0)
         self.assertTrue(self.days[self.day6].records[3].updated_amount == None)
+        self.assertTrue(self.days[self.day7].records[1].amount == -3)
+        self.assertTrue(self.days[self.day7].records[1].updated_amount == -3)
 
+    def create_account1(self):
+        acct = Account("First, A and B (123)", 123)
+        members = {
+            "First, A": Member("First, A"),
+            "First, B": Member("First, B")
+        }
+        acct.members = members
+        # incorrect: benefit should not apply
+        recordsA = [ Record(datetime(2018, 8, 27), "Rice", 1),
+                    Record(datetime(2018, 8, 27), "STAFF ALLOWANCE", -3) ]
+        recordsA[1].updated_amount = 0
+        # correct: benefit applies
+        recordsB = [ Record(datetime(2018, 8, 27), "Rice", 1),
+                    Record(datetime(2018, 8, 27), "Hot Dog", 2),
+                    Record(datetime(2018, 8, 27), "STAFF ALLOWANCE", -3) ]
+        members["First, A"].records = recordsA
+        members["First, B"].records = recordsB
+        acct.total = -2
+        return acct
+    
+    def create_account2(self):
+        acct = Account("Second, A and B (456)", 456)
+        members = {
+            "Second, A": Member("Second, A"),
+            "Second, B": Member("Second, B")
+        }
+        acct.members = members
+        # incorrect: benefit should apply but didn't
+        recordsA = [ Record(datetime(2018, 8, 28), "Hot Lunch", 5) ]
+        recordsA[0].updated_amount = 2 # should give a $3 benefit
+        
+        # correct: benefit applies
+        recordsB = [ Record(datetime(2018, 8, 30), "Rice", 1),
+                    Record(datetime(2018, 8, 30), "Hot Dog", 2),
+                    Record(datetime(2018, 8, 30), "STAFF ALLOWANCE", -3) ]
+        members["Second, A"].records = recordsA
+        members["Second, B"].records = recordsB
+        
+        acct.total = 5
+        return acct
+    
+    def test_checkAccountTotals(self):
+        acct1 = self.create_account1()
+        acct2 = self.create_account2()
+        accts = [acct1, acct2]
+        
+        self.checker.check_account_totals(accts)
+        self.assertTrue(acct1.expected_total == 1)
+        self.assertTrue(acct2.expected_total == 2)
 
 if __name__ == '__main__':
     unittest.main()

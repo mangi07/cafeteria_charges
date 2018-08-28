@@ -26,11 +26,11 @@ class TestRules(unittest.TestCase):
         self.assertFalse(result)
         
     def test_itemHasCondition(self):
-        result = self.rules.item_has_condition("Cash Register - Rice")
+        result = self.rules.item_must_be_accompanied("Cash Register - Rice")
         self.assertTrue(result)
         
     def test_itemDoesNotHaveCondition(self):
-        result = self.rules.item_has_condition("Cash Register - K3-K5 Hot Lunch")
+        result = self.rules.item_must_be_accompanied("Cash Register - K3-K5 Hot Lunch")
         self.assertFalse(result)
 
 if __name__ == '__main__':

@@ -24,6 +24,7 @@ Created on Fri Aug 24 09:20:16 2018
 """
 
 import ben.rules
+# from ben.account import Records
 
 class Day:
     def __init__(self, records=[]):
@@ -87,6 +88,12 @@ class Checker:
                 total_eligible = 0
             if total_eligible > abs(self.rules.max_benefit):
                 total_eligible = abs(self.rules.max_benefit)
+            if daily_benefit < abs(total_eligible):
+                # then too little benefit was given that day
+                benefit = daily_benefit - total_eligible
+                new_record = ben.account.Record(key, "ADD MISSING BENEFIT", benefit)
+                days[key].records.append(new_record)
+                new_record.updated_amount = benefit
             if daily_benefit > abs(total_eligible):
                 # then too much benefit was given that day and we need to take back the difference
                 take_back = daily_benefit - total_eligible
@@ -94,13 +101,18 @@ class Checker:
                     benefit.updated_amount = (abs(benefit.amount) - take_back) * -1
                     break
                 
-            
-            
                 
     def check_account_totals(self, accts):
         """TODO: for each account, add up each day's expected total
         and add to the account expected total"""
-        pass
+        for acct in accts:
+            acct.expected_total = acct.total
+            for key in acct.members:
+                for record in acct.members[key].records:
+                    if record.updated_amount is not None:
+                        difference = record.amount - record.updated_amount
+                        acct.expected_total = acct.expected_total - difference
+    
     
     
     
