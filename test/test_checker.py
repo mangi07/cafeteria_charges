@@ -124,7 +124,7 @@ class TestChecker(unittest.TestCase):
     def test_checkAccountTotals(self):
         acct1 = self.create_account1()
         acct2 = self.create_account2()
-        accts = [acct1, acct2]
+        accts = {acct1.name: acct1, acct2.name: acct2}
         
         self.checker.check_account_totals(accts)
         self.assertTrue(acct1.expected_total == 1)

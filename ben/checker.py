@@ -40,15 +40,20 @@ class Checker:
         self.rules = ben.rules.Rules()
         
     def check(self):
-        for acct_key in self.accts:
-            acct = self.accts[acct_key]
-            self.check_members(acct)
+        for key in self.accounts:
+            account = self.accounts[key]
+            self.check_members(account)
+        self.check_account_totals(self.accounts)
             
     def check_members(self, acct):
         for member_key in acct.members:
             member = acct.members[member_key]
             days = {}
+            # DEBUG
+            #print(len(member.records), member.name)
+            print("outside for", member_key)
             for record in member.records:
+                print("\tinside for")
                 if record.date not in days:
                     days[record.date] = Day()
                 day = days[record.date]
@@ -66,6 +71,7 @@ class Checker:
             part_of_eligible = 0
             benefit_records = []
             
+            # go through records for one day
             for record in days[key].records:
                 total_balance += record.amount
                 if record.amount < 0:
@@ -105,7 +111,8 @@ class Checker:
     def check_account_totals(self, accts):
         """TODO: for each account, add up each day's expected total
         and add to the account expected total"""
-        for acct in accts:
+        for key in accts:
+            acct = accts[key]
             acct.expected_total = acct.total
             for key in acct.members:
                 for record in acct.members[key].records:
