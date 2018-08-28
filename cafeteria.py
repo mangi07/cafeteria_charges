@@ -29,6 +29,6 @@ checker.check()
 
 
 
-#parser.print_account_data()
+parser.print_account_data()
 
 # TODO: coordinate with cashiers to learn menu description in their POS system

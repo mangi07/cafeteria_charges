@@ -65,20 +65,21 @@ class TestChecker(unittest.TestCase):
                             Record(self.day6, "Cash Register - Boiled Eggs", 1),
                             Record(self.day6, "Cash Register - STAFF ALLOWANCE", -3)]),
     
-            # expect first record to be updated to $2 lower since $3 benefit applies and there are no other records
+            # expect first record to remain the same and record added to member to represent benefit
             self.day7: Day([Record(self.day7, "Cash Register - Hot Lunch", 5)])
         }
 
     def test_checkDays(self):
-        self.checker.check_days(self.days)
+        member = Member("tester")
+        self.checker.check_days(self.days, member)
         self.assertTrue(self.days[self.day1].records[1].updated_amount == 0)
         self.assertTrue(self.days[self.day2].records[1].updated_amount == None)
         self.assertTrue(self.days[self.day3].records[1].updated_amount == 3)
         self.assertTrue(self.days[self.day4].records[3].updated_amount == 0)
         self.assertTrue(self.days[self.day5].records[3].updated_amount == 0)
         self.assertTrue(self.days[self.day6].records[3].updated_amount == None)
-        self.assertTrue(self.days[self.day7].records[1].amount == -3)
-        self.assertTrue(self.days[self.day7].records[1].updated_amount == -3)
+        self.assertTrue(self.days[self.day7].records[0].amount == 5)
+        self.assertTrue(member.records[0].amount == -3)
 
     def create_account1(self):
         acct = Account("First, A and B (123)", 123)

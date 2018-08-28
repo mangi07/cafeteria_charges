@@ -29,13 +29,14 @@ class Parser:
         self.temp_amount = None
         self.temp_record_descr = None
         self.prev_cell = None
+        self.prev_prev_cell = None
     
         # Example match: "LastA, FirstA and LastB, FirstB (123)"
         # group 0: "LastA, FirstA and LastB, FirstB (123)"
         # group 1: "LastA, FirstA and LastB, FirstB"
         # group 2: "123"
-        self.family_name_pattern = re.compile(r"([a-zA-Z 0-9]+, [a-zA-Z ,0-9]+) \(([0-9]+)\)")
-        self.member_pattern = re.compile(r"[a-zA-Z 0-9]+, [a-zA-Z 0-9]+")
+        self.family_name_pattern = re.compile(r"([a-zA-Z 0-9.]+, [a-zA-Z ,0-9.]+) \(([0-9]+)\)")
+        self.member_pattern = re.compile(r"[a-zA-Z 0-9.]+, [a-zA-Z 0-9.]+")
         
     
     def determine_kind(self, cell_value):
@@ -69,7 +70,7 @@ class Parser:
             self.temp_date = cell_value
         elif kind == Kind.FAMILY_MEMBER:
             self.temp_member_name = cell_value
-        elif kind == Kind.AMOUNT and self.prev_cell != "Total":
+        elif kind == Kind.AMOUNT and self.prev_cell != "Total" and self.prev_prev_cell is not None:
             # gather final cell in row and add a member's record
             self.temp_amount = cell_value
             if self.temp_member_name not in self.curr_acct.members:
@@ -83,8 +84,10 @@ class Parser:
         elif kind == Kind.OTHER and col == 2:
             # record description expected in Excel column 2
             self.temp_record_descr = cell_value
-        
+
+        self.prev_prev_cell = self.prev_cell
         self.prev_cell = cell_value
+
         
     def get_account_data(self):
         return self.accts
