@@ -10,7 +10,7 @@ import ben.parser
 import ben.checker
 
 # Load in the workbook
-wb = load_workbook('./Book1.xlsx')
+wb = load_workbook('./aug2018.xlsx')
 
 # Get sheet names
 print("Name of sheet being analyzed: ", wb.sheetnames[0])

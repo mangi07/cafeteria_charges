@@ -52,6 +52,7 @@ class Rules:
                 "Hamburger": Stats("ala carte", 2, True),
                 "Fried Chicken": Stats("ala carte", 2.5, True),
                 "Chili & Rice": Stats("ala carte", 3, True),
+                "Chili and Rice": Stats("ala carte", 3, True),
                 "Pizza": Stats("ala carte", 3, True),
                 
                 "Gatorade": Stats("drink", 2),
@@ -80,6 +81,9 @@ class Rules:
                 item = self.menu_items[item_key]
                 if item.benefit:
                     return True
+            else:
+                print("Unable to find '{}' in the list of known items.", description)
+                return self.get_bool("Is this item a benefit? (y/n) ")
         return False
     
     def item_must_be_accompanied(self, description):
@@ -87,6 +91,19 @@ class Rules:
             if item_key in description:
                 item = self.menu_items[item_key]
                 return item.accompany
+            else:
+                print("Unable to find '{}' in the list of known items.", description)
+                return self.get_bool("Is this item a benefit? (y/n) ")
         return False
+    
+    # adapted from:
+    # https://stackoverflow.com/questions/32616548/how-to-have-user-true-false-input-in-python
+    def get_bool(self, prompt):
+        while True:
+            try:
+               return {"y":True,"n":False}[input(prompt).lower()]
+            except KeyError:
+               print("Invalid input please enter 'y' or 'n'!")
+           
     
     
