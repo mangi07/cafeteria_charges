@@ -103,11 +103,15 @@ class Rules:
         
     def _add_item_to_menu(self, description):
         is_benefit = self._get_bool("\nIs this item a benefit? (y/n) ")
-        must_be_accompanied = self._get_bool(
+        if is_benefit:
+            must_be_accompanied = self._get_bool(
                 "\nDoes this item need to be accompanied for the benefit to apply? (y/n) ")
+        else:
+            must_be_accompanied = False
         mtype = self._get_option()
         amount = self._get_amount()
         self.menu_items[description] = Stats(mtype, amount, is_benefit, must_be_accompanied)
+        return is_benefit
         
     
     # adapted from:
