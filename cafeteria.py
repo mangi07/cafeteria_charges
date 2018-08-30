@@ -25,16 +25,12 @@ for row_index in range(1, sheet.max_row+1):
         parser.gather_data(sheet.cell(row=row_index, column=col_index).value,
                            row_index, col_index)
 
-#parser.print_account_data()
-
-#sys.exit()
 
 accounts = parser.get_account_data()
 checker = ben.checker.Checker(accounts)
 checker.check()
 
-
-
 parser.print_account_data()
+
 
 # TODO: coordinate with cashiers to learn menu description in their POS system
