@@ -24,7 +24,7 @@ Created on Fri Aug 24 09:20:16 2018
 """
 
 import ben.rules
-# from ben.account import Records
+from ben.account import Record
 
 class Day:
     def __init__(self, records=[]):
@@ -49,19 +49,17 @@ class Checker:
         for member_key in acct.members:
             member = acct.members[member_key]
             days = {}
-            # DEBUG
-            #print(len(member.records), member.name)
-            print("outside for", member_key)
             for record in member.records:
-                print("\tinside for")
                 if record.date not in days:
                     days[record.date] = Day()
                 day = days[record.date]
                 day.records.append(record)
-            self.check_days(days)
+            self.check_days(days, member)
+            for k, v in days.items():
+                v.records.clear()
     
-    # for each member, each Day in days contains a list of records
-    def check_days(self, days):
+    # check one member, where each Day in days contains a list of his/her records
+    def check_days(self, days, member):
         """for each day, get expected benefit"""
         for key in days:
             daily_benefit = 0
@@ -89,7 +87,7 @@ class Checker:
                         and record.amount > 0 ):
                     part_of_eligible += record.amount
                     total_eligible += record.amount
-            
+
             if part_of_eligible >= total_eligible:
                 total_eligible = 0
             if total_eligible > abs(self.rules.max_benefit):
@@ -97,9 +95,9 @@ class Checker:
             if daily_benefit < abs(total_eligible):
                 # then too little benefit was given that day
                 benefit = daily_benefit - total_eligible
-                new_record = ben.account.Record(key, "ADD MISSING BENEFIT", benefit)
-                days[key].records.append(new_record)
+                new_record = Record(key, "ADD MISSING BENEFIT", benefit)
                 new_record.updated_amount = benefit
+                member.records.append(new_record)
             if daily_benefit > abs(total_eligible):
                 # then too much benefit was given that day and we need to take back the difference
                 take_back = daily_benefit - total_eligible
@@ -109,16 +107,21 @@ class Checker:
                 
                 
     def check_account_totals(self, accts):
-        """TODO: for each account, add up each day's expected total
+        """for each account, add up each day's expected total
         and add to the account expected total"""
         for key in accts:
             acct = accts[key]
-            acct.expected_total = acct.total
+            #acct.expected_total = acct.total
+            acct.expected_total = 0
             for key in acct.members:
                 for record in acct.members[key].records:
                     if record.updated_amount is not None:
-                        difference = record.amount - record.updated_amount
-                        acct.expected_total = acct.expected_total - difference
+                        #difference = record.amount - record.updated_amount
+                        #acct.expected_total = acct.expected_total - difference
+                        acct.expected_total += record.updated_amount
+                    else:
+                        acct.expected_total += record.amount
+
     
     
     
