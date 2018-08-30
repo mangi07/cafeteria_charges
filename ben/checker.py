@@ -27,8 +27,10 @@ import ben.rules
 from ben.account import Record
 
 class Day:
-    def __init__(self, records=[]):
+    def __init__(self, records=None):
         __slots__ = ['records', 'benefit_amount', 'total', 'expected_total']
+        if records is None:
+            records = []
         self.records = records
         self.benefit_amount = 0
         self.total = 0
@@ -54,14 +56,23 @@ class Checker:
                     days[record.date] = Day()
                 day = days[record.date]
                 day.records.append(record)
+                self.debug_days(days)
             self.check_days(days, member)
             for k, v in days.items():
                 v.records.clear()
+                
+    def debug_days(self, days):
+        print("\n*****")
+        for k, v in days.items():
+            print("day: ", k)
+            for r in v.records:
+                print("**record: ", r)
     
     # check one member, where each Day in days contains a list of his/her records
     def check_days(self, days, member):
         """for each day, get expected benefit"""
         for key in days:
+            #print("Number of records for ", key, ": ", len(days[key].records))
             daily_benefit = 0
             total_charges = 0
             total_balance = 0
@@ -71,6 +82,7 @@ class Checker:
             
             # go through records for one day
             for record in days[key].records:
+                #print("day key: ", key)
                 total_balance += record.amount
                 if record.amount < 0:
                     daily_benefit += abs(record.amount)
@@ -103,6 +115,9 @@ class Checker:
                 take_back = daily_benefit - total_eligible
                 for benefit in benefit_records:
                     benefit.updated_amount = (abs(benefit.amount) - take_back) * -1
+                    #print("*daily_benefit: ", daily_benefit)
+                    #print("**total_eligible: ", total_eligible)
+                    #print("benefit.updated_amount: ", benefit.updated_amount)
                     break
                 
                 

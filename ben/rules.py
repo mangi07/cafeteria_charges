@@ -5,20 +5,24 @@ Created on Thu Aug 23 13:03:35 2018
 @author: Ben.Olson
 """
 
+from decimal import *
+
 class Stats:
     def __init__(self, mtype, amount, benefit=False, accompany=False):
         self.mtype = mtype
         self.amount = amount
         # boolean whether staff allowance applies
-        self.benefit = benefit
+        self.is_benefit = benefit
         # some other condition that must be satisfied for benefit to apply,
         # such as whether other items must be ordered that day for the benefit to apply
         # 
         # Checker is responsible to know the condition and check based on condition
-        self.accompany = accompany
+        self.must_be_accompanied = accompany
         
 class Rules:
     def __init__(self):
+        self.max_benefit = 3
+        
         self.menu_items = {
                 "Bacon": Stats("breakfast", 2),
                 "Sausage": Stats("breakfast", 2),
@@ -43,7 +47,7 @@ class Rules:
                 
                 "Chips": Stats("lunch", 1),
                 "Tuna Sushi": Stats("lunch", 2.5),
-                "Samon Sushi": Stats("lunch", 2.5),
+                "Salmon Sushi": Stats("lunch", 2.5),
                 "Musubi Sushi": Stats("lunch", 2.5),
                 "Spam Musubi": Stats("lunch", 2.5),
                 
@@ -70,40 +74,83 @@ class Rules:
                 "Acacia Bowl": Stats("other", 8),
                 
                 "Carry Out Tray": Stats("other", .25),
-                "NO ID CARD FEE": Stats("other", .5)
+                "NO ID CARD FEE": Stats("other", .5),
+                "STAFF ALLOWANCE": Stats("other", self.max_benefit*-1)
         }
         
-        self.max_benefit = 3
+        
 
     def is_allowance_item(self, description):
-        for item_key in self.menu_items:
-            if item_key in description:
-                item = self.menu_items[item_key]
-                if item.benefit:
-                    return True
-            else:
-                print("Unable to find '{}' in the list of known items.", description)
-                return self.get_bool("Is this item a benefit? (y/n) ")
-        return False
+        item = self._find_item(description)
+        if item is not None:
+            return item.is_benefit
+        else:
+            self._add_item_to_menu(description)
     
     def item_must_be_accompanied(self, description):
-        for item_key in self.menu_items:
-            if item_key in description:
-                item = self.menu_items[item_key]
-                return item.accompany
-            else:
-                print("Unable to find '{}' in the list of known items.", description)
-                return self.get_bool("Is this item a benefit? (y/n) ")
-        return False
+        item = self._find_item(description)
+        if item is not None:
+            return item.must_be_accompanied
+        else:
+            return self._get_bool("Does this item need to be accompanied for the benefit to apply? (y/n) ")
+    
+    def _find_item(self, description):
+        for key in self.menu_items:
+            if key in description:
+                item = self.menu_items[key]
+                return item
+        print("Unable to find ", description, " in the list of known items.")
+        
+    def _add_item_to_menu(self, description):
+        is_benefit = self._get_bool("\nIs this item a benefit? (y/n) ")
+        must_be_accompanied = self._get_bool(
+                "\nDoes this item need to be accompanied for the benefit to apply? (y/n) ")
+        mtype = self._get_option()
+        amount = self._get_amount()
+        self.menu_items[description] = Stats(mtype, amount, is_benefit, must_be_accompanied)
+        
     
     # adapted from:
     # https://stackoverflow.com/questions/32616548/how-to-have-user-true-false-input-in-python
-    def get_bool(self, prompt):
+    def _get_bool(self, prompt):
         while True:
             try:
                return {"y":True,"n":False}[input(prompt).lower()]
             except KeyError:
                print("Invalid input please enter 'y' or 'n'!")
+               
+    def _get_option(self):
+        prompt = "\nWhat type of item is this: (1) breakfast, (2) lunch, (3) ale carte, (4) drink, (5) other: "
+        choice = 0
+        while True:
+            try:
+                choice = int(input(prompt))
+                if choice < 1 or choice > 5:
+                    raise ValueError
+                break
+            except ValueError:
+                print("Invalid input please enter a number 1 through 5!")
+        if choice == 1:
+            mtype = "breakfast"
+        elif choice == 2:
+            mtype = "lunch"
+        elif choice == 3:
+            mtype = "ale carte"
+        elif choice == 4:
+            mtype = "drink"
+        elif choice == 5:
+            mtype = "other"
+        return mtype
+            
+    def _get_amount(self):
+        prompt = "\nWhat is the item's amount?"
+        while True:
+            try:
+               choice = Decimal(input(prompt))
+               break
+            except ValueError:
+               print("Invalid input please enter a number 1 through 4!")
+            
            
     
     
