@@ -8,6 +8,7 @@ Created on Tue Aug 21 08:53:06 2018
 from openpyxl import load_workbook
 import ben.parser
 import ben.checker
+from datetime import datetime
 
 
 # Load in the workbook
@@ -18,7 +19,9 @@ sheet_index = 2
 print("Name of sheet being analyzed: ", wb.sheetnames[sheet_index])
 
 sheet = wb[wb.sheetnames[sheet_index]]
-parser = ben.parser.Parser()
+
+
+parser = ben.parser.Parser(datetime(2018, 8, 20), datetime(2018, 8, 21))
 # cells must be traversed in this order for parser to work correctly!
 for row_index in range(1, sheet.max_row+1):
     for col_index in range(1, sheet.max_column+1): 

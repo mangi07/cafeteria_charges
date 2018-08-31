@@ -19,7 +19,7 @@ class Kind(Enum):
 
 class Parser:
     
-    def __init__(self):
+    def __init__(self, min_date, max_date):
         self.accts = {}
         self.curr_acct = None
         self.curr_member = None
@@ -30,7 +30,10 @@ class Parser:
         self.temp_record_descr = None
         self.prev_cell = None
         self.prev_prev_cell = None
-    
+        
+        self.min_date = min_date
+        self.max_date = max_date
+        
         # Example match: "LastA, FirstA and LastB, FirstB (123)"
         # group 0: "LastA, FirstA and LastB, FirstB (123)"
         # group 1: "LastA, FirstA and LastB, FirstB"
@@ -71,8 +74,10 @@ class Parser:
         elif kind == Kind.FAMILY_MEMBER:
             self.temp_member_name = cell_value
         elif kind == Kind.AMOUNT and self.prev_cell != "Total" and self.prev_prev_cell is not None:
-            # gather final cell in row and add a member's record
+            # gather final cell in row and if within date range, add a member's record
             self.temp_amount = cell_value
+            if self.temp_date < self.min_date or self.temp_date > self.max_date:
+                return
             if self.temp_member_name not in self.curr_acct.members:
                 self.curr_acct.add_member(self.temp_member_name)
             self.curr_acct.members[self.temp_member_name].add_record(
