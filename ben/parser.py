@@ -115,7 +115,7 @@ class Parser:
                 member = acct.members[member_key]
                 print("\n****Member: ", member.name)
                 for record in member.records:
-                    print("********Record: Date: ", record.date,
+                    print("********Record: Date: ", str(record.date.date()),
                           " Description: ", record.description,
                           " Amount: ", record.amount,
                           " Updated Amount: ", record.updated_amount)
@@ -125,7 +125,7 @@ class Parser:
         mrow = 1
         
         filepath = os.getcwd() + "/" + file_name
-        print("Exporting results to: ", filepath)
+        print("\nExporting results to: ", filepath)
 
         wb = Workbook()
         ws = wb.active
@@ -142,7 +142,8 @@ class Parser:
                     #ws.cell(row=mrow, column=mcol).value = member.name
                     #mrow += 1
                     #amount = record.updated_amount or record.amount
-                    data = (record.date, record.description, "", member.name, "", record.amount, record.updated_amount)
+                    data = (str(record.date.date()), record.description, "", 
+                            member.name, "", record.amount, record.updated_amount)
                     ws.append(data)
                     mrow +=1
             

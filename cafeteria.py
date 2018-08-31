@@ -12,8 +12,8 @@ from datetime import datetime
 
 
 # Load in the workbook
-wb = load_workbook('./aug2018copy.xlsx')
-sheet_index = 2
+wb = load_workbook('./test_data.xlsx')
+sheet_index = 0
 
 # Get sheet names
 print("Name of sheet being analyzed: ", wb.sheetnames[sheet_index])
