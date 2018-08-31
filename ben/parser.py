@@ -9,6 +9,13 @@ import datetime
 from enum import Enum
 from ben.account import *
 
+# needed for export to *.xlsx
+import os
+from openpyxl import Workbook
+from openpyxl.styles import colors
+from openpyxl.styles import Font, Color
+from openpyxl.styles import PatternFill
+
 class Kind(Enum):
         FAMILY_NAME = 1
         DATE = 2
@@ -112,6 +119,40 @@ class Parser:
                           " Description: ", record.description,
                           " Amount: ", record.amount,
                           " Updated Amount: ", record.updated_amount)
+                    
+    def print_to_file(self, file_name):
+        mcol = 1
+        mrow = 1
+        
+        filepath = os.getcwd() + "/" + file_name
+        print("Exporting results to: ", filepath)
+
+        wb = Workbook()
+        ws = wb.active
+        
+        for acct_key in self.accts:
+            acct = self.accts[acct_key]
+            
+            ws.cell(row=mrow, column=mcol).value = acct.name
+            mrow += 1
+            
+            for k, member in acct.members.items():
+                #member.records.sort(key = date)
+                for record in member.records:
+                    #ws.cell(row=mrow, column=mcol).value = member.name
+                    #mrow += 1
+                    #amount = record.updated_amount or record.amount
+                    data = (record.date, record.description, "", member.name, "", record.amount, record.updated_amount)
+                    ws.append(data)
+                    mrow +=1
+            
+            ws.cell(row=mrow, column=5).value = "Total"
+            ws.cell(row=mrow, column=6).value = acct.total
+            ws.cell(row=mrow, column=7).value = acct.expected_total
+            mrow += 1
+            
+        wb.save(filepath)
+            
                     
 
     

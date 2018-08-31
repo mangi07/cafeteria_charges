@@ -3,6 +3,8 @@
 Created on Thurs Aug 30, 2018
 
 @author: Ben.Olson
+
+TODO: Gather 
 """
 
 import os
@@ -11,13 +13,10 @@ from openpyxl.styles import colors
 from openpyxl.styles import Font, Color
 from openpyxl.styles import PatternFill
 
+
 wb = Workbook()
-
 filepath = os.getcwd() + "/export.xlsx"
-
-print(filepath)
-
-wb.save(filepath)
+print("Exporting results to: ", filepath)
 
 sheet = wb.active
 

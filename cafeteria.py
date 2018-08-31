@@ -21,7 +21,7 @@ print("Name of sheet being analyzed: ", wb.sheetnames[sheet_index])
 sheet = wb[wb.sheetnames[sheet_index]]
 
 
-parser = ben.parser.Parser(datetime(2018, 8, 20), datetime(2018, 8, 21))
+parser = ben.parser.Parser(datetime(2018, 8, 1), datetime(2018, 8, 31))
 # cells must be traversed in this order for parser to work correctly!
 for row_index in range(1, sheet.max_row+1):
     for col_index in range(1, sheet.max_column+1): 
@@ -34,6 +34,7 @@ checker = ben.checker.Checker(accounts)
 checker.check()
 
 parser.print_account_data()
+parser.print_to_file("export.xlsx")
 
 
 # TODO: coordinate with cashiers to learn menu description in their POS system
