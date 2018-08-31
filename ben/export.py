@@ -32,7 +32,7 @@ for row in data:
 ft = Font(color = colors.WHITE)
 b2 = sheet['b2']
 b2.font = ft
-b2.fill = PatternFill(bgColor=colors.DARKRED, fill_type = "solid")
+b2.fill = PatternFill(bgColor = colors.DARKRED, fill_type = "solid")
 
 # save file
 wb.save(filepath)

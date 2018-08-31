@@ -8,7 +8,7 @@ Created on Tue Aug 21 08:53:06 2018
 from openpyxl import load_workbook
 import ben.parser
 import ben.checker
-import sys
+
 
 # Load in the workbook
 wb = load_workbook('./aug2018copy.xlsx')

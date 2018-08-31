@@ -56,7 +56,7 @@ class Checker:
                     days[record.date] = Day()
                 day = days[record.date]
                 day.records.append(record)
-                self.debug_days(days)
+                #self.debug_days(days)
             self.check_days(days, member)
             for k, v in days.items():
                 v.records.clear()
@@ -98,7 +98,10 @@ class Checker:
                     part_of_eligible += record.amount
                     total_eligible += record.amount
 
-            if part_of_eligible >= total_eligible:
+            #if part_of_eligible >= total_eligible:
+            # for non-benefit items that must be accompanied,
+            # they can be accompanied by non-benefit items to meet the requirement
+            if part_of_eligible >= total_charges:
                 total_eligible = 0
             if total_eligible > abs(self.rules.max_benefit):
                 total_eligible = abs(self.rules.max_benefit)

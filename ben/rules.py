@@ -81,25 +81,33 @@ class Rules:
         
 
     def is_allowance_item(self, description):
-        item = self._find_item(description)
+        key, item = self._find_item(description)
         if item is not None:
             return item.is_benefit
         else:
-            self._add_item_to_menu(description)
+            return self._add_item_to_menu(description)
     
     def item_must_be_accompanied(self, description):
-        item = self._find_item(description)
+        key, item = self._find_item(description)
         if item is not None:
             return item.must_be_accompanied
         else:
             return self._get_bool("Does this item need to be accompanied for the benefit to apply? (y/n) ")
     
     def _find_item(self, description):
-        for key in self.menu_items:
-            if key in description:
-                item = self.menu_items[key]
-                return item
-        print("Unable to find ", description, " in the list of known items.")
+        matching_keys = []
+        item = None
+        closest_key = None
+        for k in self.menu_items:
+            if k in description:
+                matching_keys.append(k)
+        if matching_keys:
+            closest_key = max(matching_keys, key=len)
+            item = self.menu_items[closest_key]
+        if item is None:
+            print("Unable to find ", description, " in the list of known items.")
+        return (closest_key, item)
+        
         
     def _add_item_to_menu(self, description):
         is_benefit = self._get_bool("\nIs this item a benefit? (y/n) ")

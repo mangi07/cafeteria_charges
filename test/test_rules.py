@@ -13,6 +13,7 @@ class TestRules(unittest.TestCase):
 
     rules = None
     
+    
     def setUp(self):
         self.rules = Rules()
         
@@ -32,6 +33,22 @@ class TestRules(unittest.TestCase):
     def test_itemDoesNotHaveCondition(self):
         result = self.rules.item_must_be_accompanied("Cash Register - K3-K5 Hot Lunch")
         self.assertFalse(result)
+        
+    def test_findItem(self):
+        key, item = self.rules._find_item("Chili & Rice")
+        self.assertTrue( key == "Chili & Rice" )
+        key, item = self.rules._find_item("Chili and Rice")
+        self.assertTrue( key == "Chili and Rice" )
+        key, item = self.rules._find_item("Rice")
+        self.assertTrue( key == "Rice" )
+        
+        key = None
+        item = None
+        key, item = self.rules._find_item("Chili")
+        self.assertTrue( key == None )
+        self.assertTrue( item == None )
+        
+        
 
 if __name__ == '__main__':
     unittest.main()
