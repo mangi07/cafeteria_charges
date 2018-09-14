@@ -34,6 +34,10 @@ class Rules:
                 "Yogurt": Stats("breakfast", 1),
                 "Pop Tarts": Stats("breakfast", 1),
                 "Boiled Eggs": Stats("breakfast", .5),
+                "Cereal": Stats("breakfast", 1),
+                "Eggs": Stats("breakfast", 1.5),
+                "Boiled Egg": Stats("breakfast", .5),
+                "Pop Tart": Stats("breakfast", 1),
                 
                 # allowed lunch items in this group
                 "Hot Lunch": Stats("lunch", 5, True),
@@ -43,6 +47,7 @@ class Rules:
                 "Chicken Nuggets": Stats("lunch", 2.5, True),
                 "Hot Dog": Stats("lunch", 2, True),
                 "French Fries": Stats("lunch", 2, True),
+                "STAFF HOT LUNCH": Stats("lunch", 5, True),
                 "Rice": Stats("lunch", 1, True, True),
                 
                 "Chips": Stats("lunch", 1),
@@ -50,6 +55,7 @@ class Rules:
                 "Salmon Sushi": Stats("lunch", 2.5),
                 "Musubi Sushi": Stats("lunch", 2.5),
                 "Spam Musubi": Stats("lunch", 2.5),
+                "Sushi": Stats("lunch", 2.5),
                 
                 # allowed ala carte items in this group
                 "Corn Dog": Stats("ala carte", 2, True),
@@ -71,9 +77,11 @@ class Rules:
                 "Sherbert Push Pop": Stats("other", 1),
                 "Fruit Bar": Stats("other", 1.5),
                 "Ice Cream Sandwich": Stats("other", 1.5),
-                "Acacia Bowl": Stats("other", 8),
+                "Acai Bowl": Stats("other", 8),
                 
                 "Carry Out Tray": Stats("other", .25),
+                "Carry-Out Tray": Stats("other", .25),
+                "Take-Out Tray": Stats("other", .25),
                 "NO ID CARD FEE": Stats("other", .5),
                 "STAFF ALLOWANCE": Stats("other", self.max_benefit*-1)
         }

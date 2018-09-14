@@ -45,7 +45,7 @@ class Parser:
         # group 0: "LastA, FirstA and LastB, FirstB (123)"
         # group 1: "LastA, FirstA and LastB, FirstB"
         # group 2: "123"
-        self.family_name_pattern = re.compile(r"([a-zA-Z 0-9.]+, [a-zA-Z ,0-9.]+) \(([0-9]+)\)")
+        self.family_name_pattern = re.compile(r"([a-zA-Z 0-9.]+, [a-zA-Z ,0-9.()-]+) \(([0-9]+)\)")
         self.member_pattern = re.compile(r"[a-zA-Z 0-9.]+, [a-zA-Z 0-9.]+")
         
     
@@ -83,8 +83,8 @@ class Parser:
         elif kind == Kind.AMOUNT and self.prev_cell != "Total" and self.prev_prev_cell is not None:
             # gather final cell in row and if within date range, add a member's record
             self.temp_amount = cell_value
-            if self.temp_date < self.min_date or self.temp_date > self.max_date:
-                return
+            #if self.temp_date < self.min_date or self.temp_date > self.max_date:
+            #    return
             if self.temp_member_name not in self.curr_acct.members:
                 self.curr_acct.add_member(self.temp_member_name)
             self.curr_acct.members[self.temp_member_name].add_record(

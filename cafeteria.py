@@ -12,7 +12,7 @@ from datetime import datetime
 
 
 # Load in the workbook
-wb = load_workbook('./test_data.xlsx')
+wb = load_workbook('./aug18copy.xlsx')
 sheet_index = 0
 
 # Get sheet names
@@ -21,7 +21,7 @@ print("Name of sheet being analyzed: ", wb.sheetnames[sheet_index])
 sheet = wb[wb.sheetnames[sheet_index]]
 
 
-parser = ben.parser.Parser(datetime(2018, 8, 1), datetime(2018, 8, 31))
+parser = ben.parser.Parser(datetime(2018, 8, 20), datetime(2018, 8, 31))
 # cells must be traversed in this order for parser to work correctly!
 for row_index in range(1, sheet.max_row+1):
     for col_index in range(1, sheet.max_column+1): 
@@ -30,7 +30,12 @@ for row_index in range(1, sheet.max_row+1):
 
 
 accounts = parser.get_account_data()
-checker = ben.checker.Checker(accounts)
+
+# specify dates during which the special rules apply
+min_date = datetime(2018, 8, 20)
+max_date = datetime(2018, 8, 31)
+
+checker = ben.checker.Checker(accounts, min_date, max_date)
 checker.check()
 
 parser.print_account_data()
