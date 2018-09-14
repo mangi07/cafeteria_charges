@@ -112,7 +112,8 @@ class Checker:
                             and record.amount > 0 ):
                         part_of_eligible += record.amount
                         total_eligible += record.amount
-                elif record.amount > 0:
+                # TODO: modify this when rules change
+                elif record.amount > 0 and "hot lunch" in record.description.lower():
                     total_eligible += record.amount
             
             #if part_of_eligible >= total_eligible:
